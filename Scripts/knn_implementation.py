@@ -7,6 +7,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 from vector_fft_media_absoluta import load_datasets
 from sklearn.metrics import confusion_matrix
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
 ## Utilizar arbol de desición para obtener las mejores caracteristicas y PCA
 
@@ -75,25 +77,57 @@ def accuracy_mean_score(runs_number,data1,data2,length=1488):
 		score_sum += KNN(data1,data2,length);
 	print("The Real Score for memory and relax is {}".format(score_sum/x))
 
+def standarize_data(data):
+	standar_data = StandardScaler().fit_transform(data);
+
+	return standar_data;
+
+def pca_implementation(x):
+	pca = PCA(n_components=2)
+	principalComponents = pca.fit_transform(x)
+	principalDf = pd.DataFrame(data = principalComponents, columns =['Principal Component 1','Principal Component 2'])
+	print(principalDf.head())
+	principalNumpy = np.array(principalDf);
+
+	return principalNumpy
+
+
 # Carga de los vectores de caracteristicas
 memory_dataset = load_datasets('vector_ftt_abs_mean_memory.csv');
 relax_dataset = load_datasets('vector_fft_abs_mean_relax.csv');
 relax_music_dataset = load_datasets('vector_fft_abs_mean_relax_music.csv');
+print("Datos sin estandarizar")
+print(memory_dataset[:,0:7])
+# Estandariza los datos a una escala mas uniforme
+memory_dataset = standarize_data(memory_dataset); 
+relax_dataset = standarize_data(relax_dataset);
+relax_music_dataset = standarize_data(relax_music_dataset);
+print("Datos estandarizados")
+print(memory_dataset[:,0:7])
+
+memory_pca = pca_implementation(memory_dataset); 
+relax_pca = pca_implementation(relax_dataset);
+relax_music_pca = pca_implementation(relax_music_dataset);
+
+print("Memory PCA")
+print(memory_pca[:,0:7])
+
+
 
 # Getting the mean of the accuracy score
 #accuracy_mean_score(50,memory_dataset,relax_dataset)
 
 # Ploting the results of corss_validation
-# score, MSE, neighbors = KNN(memory_dataset,relax_dataset,1488,True);
-# plot_cross_validation(MSE, neighbors)
+score, MSE, neighbors = KNN(memory_pca,relax_music_pca,3620,True,1,[0,1]);
+plot_cross_validation(MSE, neighbors)
 
-print(KNN(memory_dataset,relax_music_dataset,3620,False,1))
-print(KNN(memory_dataset,relax_dataset,1488,False,1))
-print(KNN(relax_dataset,relax_music_dataset,1488,False,1))
-
-
+print(KNN(memory_pca,relax_music_pca,3620,False,1,[0,1]))
+print(KNN(memory_pca,relax_pca,1488,False,1,[0,1]))
+print(KNN(relax_pca,relax_music_pca,1488,False,1,[0,1]))
 
 
-# print(memory_dataset.shape)
+
+
+# print(memory_pca.shape)
 # print(relax_dataset.shape)
 # print(relax_music_dataset.shape)

@@ -17,7 +17,7 @@ def load_files(files,percent):
 		temp = temp[[3,7,9,12,16]][1:].apply(pd.to_numeric)	
 		cut_rows = int(len(temp.index) * percent);		
 		temp = temp[:][cut_rows:len(temp.index) - cut_rows]			
-		df = df.append(temp, ignore_index=True);		
+		df = df.append(temp, ignore_index=True);			
 	return df;
 percent = input("Percent of the data to cut in both sides? %")
 percent = int(percent) / 100;

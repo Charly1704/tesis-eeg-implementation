@@ -16,7 +16,7 @@ from sklearn.decomposition import PCA
 # de vecinos en el clasificador
 def cross_validation(x_train,y_train):
 	# creating odd list of K for KNN
-	myList = list(range(1,50))
+	myList = list(range(1,100))
 
 	# subsetting just the odd ones
 	neighbors =[x for x in myList if x % 2 != 0];	
@@ -39,7 +39,7 @@ def cross_validation(x_train,y_train):
 	return MSE, neighbors
 
 # Realiza el entrenamiento y la clasificación utilizando el clasificador KNN
-def KNN(class_1,class_2,apply_cross_validation=False,neighbors=17,columns=[3,5]):
+def KNN(class_1,class_2,apply_cross_validation=False,neighbors=17,columns=[3,4]):
 	length = max_data_length(class_1,class_2);
 	
 	target_class_1 = np.repeat(1,length);
@@ -87,7 +87,6 @@ def pca_implementation(x):
 	pca = PCA(n_components=2)
 	principalComponents = pca.fit_transform(x)
 	principalDf = pd.DataFrame(data = principalComponents, columns =['Principal Component 1','Principal Component 2'])
-	print(principalDf.head())
 	principalNumpy = np.array(principalDf);
 
 	return principalNumpy
@@ -111,9 +110,9 @@ relax_music_dataset = load_datasets('vector_fft_abs_mean_relax_music.csv');
 
 
 
-memory_pca = pca_implementation(memory_dataset); 
-relax_pca = pca_implementation(relax_dataset);
-relax_music_pca = pca_implementation(relax_music_dataset);
+# memory_pca = pca_implementation(memory_dataset); 
+# relax_pca = pca_implementation(relax_dataset);
+# relax_music_pca = pca_implementation(relax_music_dataset);
 
 
 
@@ -123,14 +122,14 @@ relax_music_pca = pca_implementation(relax_music_dataset);
 #accuracy_mean_score(50,memory_dataset,relax_dataset)
 
 # Ploting the results of corss_validation
-score, MSE, neighbors = KNN(memory_pca,relax_music_pca,True,49,[0,1]);
-# plot_cross_validation(MSE, neighbors)
+score, MSE, neighbors = KNN(memory_dataset,relax_music_dataset,True,49);
+plot_cross_validation(MSE, neighbors)
 
-score, MSE, neighbors = KNN(memory_pca,relax_pca,True,33,[0,1]);
-# plot_cross_validation(MSE, neighbors)
+score, MSE, neighbors = KNN(memory_dataset,relax_dataset,True,33);
+plot_cross_validation(MSE, neighbors)
 
-score, MSE, neighbors = KNN(relax_pca,relax_music_pca,True,23,[0,1]);
-# plot_cross_validation(MSE, neighbors)
+score, MSE, neighbors = KNN(relax_dataset,relax_music_dataset,True,23);
+plot_cross_validation(MSE, neighbors)
 
 # print(KNN(memory_pca,relax_music_pca,False,13,[0,1]))
 # print(KNN(memory_pca,relax_pca,False,13,[0,1]))

@@ -26,8 +26,9 @@ def cross_validation(x_train,y_train):
 
 	# perform 10-fold cross validation
 	for k in neighbors:
-	    knn = KNeighborsClassifier(n_neighbors=k,weights='distance',metric='minkowski',p=1)
+	    knn = KNeighborsClassifier(n_neighbors=k,weights='distance',metric='minkowski',p=2)
 	    scores = cross_val_score(knn, x_train, y_train, cv=10, scoring='accuracy')
+	    # print("Scores Length: {}".format(len(scores)))
 	    cv_scores.append(scores.mean())
 	# changing to misclassification error
 	MSE = [1 - x for x in cv_scores]	
@@ -50,7 +51,7 @@ def KNN(class_1,class_2,apply_cross_validation=False,neighbors=17,columns=[3,4])
 	x_train, x_test, y_train, y_test = train_test_split(eeg_dataset, targets, test_size=0.40, random_state=42)
 	if(apply_cross_validation):
 		MSE, neighbors_list = cross_validation(x_train, y_train);
-	knn = KNeighborsClassifier(n_neighbors=neighbors,weights='distance',metric='minkowski',p=1)
+	knn = KNeighborsClassifier(n_neighbors=neighbors,weights='distance',metric='minkowski',p=2)
 	knn.fit(x_train, y_train)
 
 	pred = knn.predict(x_test)
@@ -115,21 +116,38 @@ relax_music_dataset = load_datasets('vector_fft_abs_mean_relax_music.csv');
 # relax_music_pca = pca_implementation(relax_music_dataset);
 
 
-
+num_array = list()
+num = 2
+for i in range(int(num)):
+    n = input("num :")
+    num_array.append(int(n))
 
 
 # Getting the mean of the accuracy score
 #accuracy_mean_score(50,memory_dataset,relax_dataset)
 
 # Ploting the results of corss_validation
-score, MSE, neighbors = KNN(memory_dataset,relax_music_dataset,True,49);
+print("+++++==MEMORIA-RELAJACION==++++")
+score, MSE, neighbors = KNN(memory_dataset,relax_dataset,True,33,num_array);
 plot_cross_validation(MSE, neighbors)
 
-score, MSE, neighbors = KNN(memory_dataset,relax_dataset,True,33);
+print("+++++==MEMORIA-RELAJACION_MUSICA==++++")
+score, MSE, neighbors = KNN(memory_dataset,relax_music_dataset,True,49,num_array);
 plot_cross_validation(MSE, neighbors)
 
-score, MSE, neighbors = KNN(relax_dataset,relax_music_dataset,True,23);
+print("+++++==RELAJACION-RELAJACION_MUSICA==++++")
+score, MSE, neighbors = KNN(relax_dataset,relax_music_dataset,True,23,num_array);
 plot_cross_validation(MSE, neighbors)
+
+# Results using PCA Coeficients
+# score, MSE, neighbors = KNN(memory_pca,relax_music_pca,True,49);
+# plot_cross_validation(MSE, neighbors)
+
+# score, MSE, neighbors = KNN(memory_pca,relax_pca,True,33);
+# plot_cross_validation(MSE, neighbors)
+
+# score, MSE, neighbors = KNN(relax_pca,relax_music_pca,True,23);
+# plot_cross_validation(MSE, neighbors)
 
 # print(KNN(memory_pca,relax_music_pca,False,13,[0,1]))
 # print(KNN(memory_pca,relax_pca,False,13,[0,1]))

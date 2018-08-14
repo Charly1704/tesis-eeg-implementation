@@ -18,7 +18,7 @@ def load_datasets(name):
 def butterwort_high_pass(data,highcut,order=4,fs=128):
 	fs_norm = 0.5 * fs;
 	high_fs_norm = highcut / fs_norm		
-	low_fs_norm = 64 / fs_norm	
+	low_fs_norm = 40 / fs_norm	
 	b,a = signal.butter(order,high_fs_norm,btype='highpass',analog=True)
 	high_data = signal.lfilter(b, a, data);	
 	c,d = signal.butter(order,low_fs_norm,btype='lowpass',analog=True)
@@ -68,12 +68,11 @@ def slide_windows(data,samplesPerSecons=128):
 	for item in range(0,windows_number):
 		if(item == 0):
 			# FFT Implementation
-			print(samplesPerSecons)
-			print()
-			plt.plot(range(0,samplesPerSecons), data[0:samplesPerSecons])
-			plt.xlabel('Samples')
-			plt.ylabel('Data')
-			plt.show()
+			print(samplesPerSecons)			
+			# plt.plot(range(0,samplesPerSecons), data[0:samplesPerSecons])
+			# plt.xlabel('Samples')
+			# plt.ylabel('Data')
+			# plt.show()
 			fft_vector = fft(data[0:samplesPerSecons]) # Try with np.fft
 
 			n = samplesPerSecons # length of the signal
@@ -85,10 +84,10 @@ def slide_windows(data,samplesPerSecons=128):
 			Y = fft_vector;
 			Y = Y[range(int(n/2))]
 
-			plt.plot(frq, abs(Y),'r')
-			plt.xlabel('Freq (Hz)')
-			plt.ylabel('|Y(freq)|')
-			plt.show()		
+			# plt.plot(frq, abs(Y),'r')
+			# plt.xlabel('Freq (Hz)')
+			# plt.ylabel('|Y(freq)|')
+			# plt.show()		
 
 			results[item] = absolute_mean(fft_vector)
 
@@ -118,17 +117,19 @@ relax_dataset = load_datasets('relax_dataset.csv');
 relax_music_dataset = load_datasets('relax_music_dataset.csv');
 
 
-plt.figure(1)
-plt.subplot(211)
-plt.title('Datos Crudos')
-plt.plot(range(0,256),memory_dataset[0:256,0])
+# plt.figure(1)
+# plt.subplot(211)
+# plt.title('Datos Crudos')
+# plt.plot(range(0,256),memory_dataset[0:256,0])
 
 fl_memory, fl_relax, fl_relax_music = clean_noise(memory_dataset,relax_dataset,relax_music_dataset);
-plt.figure(2)
-plt.subplot(212)
-plt.title('Datos Filtrados')
-plt.plot(range(0,256),fl_memory[0:256,0])
-plt.show();
+
+# Plot of data before and after butterworth filter 
+# plt.figure(2)
+# plt.subplot(212)
+# plt.title('Datos Filtrados')
+# plt.plot(range(0,256),fl_memory[0:256,0])
+# plt.show();
 
 size_window = int(input("Size of the window? "))
 
@@ -150,9 +151,9 @@ relax_music_fft_df.to_csv('vector_fft_abs_mean_relax_music.csv')
 # print(relax_fft.shape)
 # print(relax_music_fft.shape)
 
-plt.scatter(memory_fft[0:100,0],memory_fft[0:100,4])
-plt.scatter(relax_fft[0:100,0],relax_fft[0:100,4])
-plt.scatter(relax_music_fft[0:100,0],relax_music_fft[0:100,4])
+plt.scatter(memory_fft[0:100,3],memory_fft[0:100,4])
+# plt.scatter(relax_fft[0:100,3],relax_fft[0:100,4])
+plt.scatter(relax_music_fft[0:100,3],relax_music_fft[0:100,4])
 plt.title('Muestra de la distrubución de los datos')
 plt.xlabel('AF4')
 plt.ylabel('AF3')

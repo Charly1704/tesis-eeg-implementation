@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+# -*- coding: utf-8 -*-
+
 import pandas as pd
 
 memory_files = ['Memoria2016310_1840.csv','Memoria2016310_1920.csv','Memoria2016422_1616.csv','Memoria2016422_1645.csv',

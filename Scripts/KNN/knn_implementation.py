@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+# -*- coding: utf-8 -*-
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 from vector_fft_media_absoluta import load_datasets
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
@@ -57,6 +61,7 @@ def KNN(class_1,class_2,apply_cross_validation=False,neighbors=17,columns=[3,4])
 	pred = knn.predict(x_test)
 	if(apply_cross_validation):
 		print(confusion_matrix(y_test,pred))
+		print(classification_report(y_test, pred))
 		return accuracy_score(y_test,pred),MSE, neighbors_list
 	else:
 		print(confusion_matrix(y_test,pred))
@@ -119,7 +124,7 @@ relax_music_dataset = load_datasets('vector_fft_abs_mean_relax_music.csv');
 num_array = list()
 num = 2
 for i in range(int(num)):
-    n = input("num :")
+    n = input("Seleccione el indice correspondiente al electrodo de su eleccion( 0=AF3, 1=T7, 2=Pz, 3=T8, 4=AF4):")
     num_array.append(int(n))
 
 

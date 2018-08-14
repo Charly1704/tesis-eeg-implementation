@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+# -*- coding: utf-8 -*-
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,7 +22,7 @@ def load_datasets(name):
 def butterwort_high_pass(data,highcut,order=4,fs=128):
 	fs_norm = 0.5 * fs;
 	high_fs_norm = highcut / fs_norm		
-	low_fs_norm = 40 / fs_norm	
+	low_fs_norm = 64 / fs_norm	
 	b,a = signal.butter(order,high_fs_norm,btype='highpass',analog=True)
 	high_data = signal.lfilter(b, a, data);	
 	c,d = signal.butter(order,low_fs_norm,btype='lowpass',analog=True)

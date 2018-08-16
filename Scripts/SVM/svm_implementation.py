@@ -25,23 +25,18 @@ def max_data_length(data1,data2):
 	else:
 		return np.size(data1,0)
 
-def SVM(class_1,class_2,kernel='linear',columns=[3,4]):
-	length = max_data_length(class_1,class_2)
-	print("La clase de mayor tamaño tiene: {0}".format(length))
-	target_class_1 = np.repeat(1,length);
-	target_class_2 = np.repeat(2,length);	
-	targets = np.concatenate((target_class_1,target_class_2));
-	eeg_dataset = np.concatenate((class_1[0:length,columns], class_2[0:length,columns]))
-	print("Se crearon los vectores")
+def SVM(dataset,columns=[3,4]):	
+	data = np.delete(dataset,5,1)
+	targets = dataset[:,5];	
 
-	x_train, x_test, y_train, y_test = train_test_split(eeg_dataset, targets, test_size=0.40, random_state=42)
-	print("Se crearon los destos")
-	svclassifier = svm.SVC(kernel='rbf')
-	print("Entrenando modelo")
+	x_train, x_test, y_train, y_test = train_test_split(data, targets, test_size=0.40, random_state=42)
+	
+	svclassifier = svm.SVC(C=1,kernel='rbf')
+	
 	svclassifier.fit(x_train, y_train)
-	print("Obteniendo predicciones")
+	
 	y_pred = svclassifier.predict(x_test)
-	print("Imprimiendo matrices")
+	
 	print(confusion_matrix(y_test,y_pred))
 	print(classification_report(y_test, y_pred))
 
@@ -71,23 +66,29 @@ memory_dataset = standarize_data(memory_dataset);
 relax_dataset = standarize_data(relax_dataset);
 relax_music_dataset = standarize_data(relax_music_dataset);
 
+print(memory_dataset.shape)
+
+memory_dataset = np.insert(memory_dataset,5, 1, axis=1)
+relax_dataset = np.insert(relax_dataset,5, 2, axis=1)
+relax_music_dataset = np.insert(relax_music_dataset,5, 3, axis=1)
+
+print(memory_dataset.shape)
+
+
+
+eeg_dataset = np.concatenate((memory_dataset,relax_dataset,relax_music_dataset));
+
+print(eeg_dataset[0:10,:])
+
+
 num_array = list()
 num = 2
 for i in range(int(num)):
     n = input("Seleccione el indice correspondiente al electrodo de su eleccion( 0=AF3, 1=T7, 2=Pz, 3=T8, 4=AF4):")
     num_array.append(int(n))
 
-kernel = input("Especifique EL tipo de kernel:");
-
 
 # Ploting the results of corss_validation
 print("+++++==MEMORIA-RELAJACION==++++")
-SVM(memory_dataset,relax_dataset,kernel,num_array)
+SVM(eeg_dataset,num_array)
 
-
-print("+++++==MEMORIA-RELAJACION_MUSICA==++++")
-SVM(memory_dataset,relax_music_dataset,kernel,num_array)
-
-
-print("+++++==RELAJACION-RELAJACION_MUSICA==++++")
-SVM(relax_dataset,relax_music_dataset,kernel,num_array)

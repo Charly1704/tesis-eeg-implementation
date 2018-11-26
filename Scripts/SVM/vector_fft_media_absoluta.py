@@ -18,7 +18,7 @@ def load_datasets(name):
 	array = array[:,1:]
 	return array;
 
-# Aplica un filtro butterworth high_pass a los datos
+# Aplica un filtro butterworth high_pass y low_pass a los datos
 def butterwort_high_pass(data,highcut,order=4,fs=128):
 	fs_norm = 0.5 * fs;
 	high_fs_norm = highcut / fs_norm		

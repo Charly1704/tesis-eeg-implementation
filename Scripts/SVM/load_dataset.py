@@ -7,8 +7,11 @@ relax_files = ['Relajacion_wm_a12017914_2012.csv','Relajacion_wm_a22017914_2030.
 relax_music_files = ['relajacion2016310_1852.csv','Relajacion2016310_1931.csv','Relajacion2016422_188.csv','Relajacion2016422_1628.csv',
 					'relajacion2016422_1657.csv','Relajacion2016422_1723.csv','Relajacion2016422_1738.csv','Relajacion2016422_1839.csv'];
 
-# Carga los archivos crudos, obtiene unicamente los datos de los electrodos
-# y corta cada uno de los archivo un 10% al inicio y al final
+# Carga los archivos de datos crudos para cada una de las clases,
+# obtiene unicamente los datos de los electrodos que corresponden a 
+# las columnas 3=AF3, 7=T7, 9=Pz, 12=T8 y 16=AF4.
+# La función corta cada uno de los archivo un 15% al inicio y al final
+# para tomar en cuenta solamente el centro de la actividad
 def load_files(files,percent):
 	df = pd.DataFrame();
 

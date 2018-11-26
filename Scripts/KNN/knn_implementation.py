@@ -14,11 +14,11 @@ from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
-## Utilizar arbol de desición para obtener las mejores caracteristicas y PCA
+
 
 ## Obtiene el error de clasificación utilizando diferentes numero 
 # de vecinos en el clasificador
-def cross_validation(x_train,y_train):
+def cross_validation(x_train,y_train, x_test, y_test):
 	# creating odd list of K for KNN
 	myList = list(range(1,100))
 
@@ -27,19 +27,33 @@ def cross_validation(x_train,y_train):
 
 	# empty list that will hold cv scores
 	cv_scores = []
+	final_results = [];	
+
+	targets = np.concatenate((y_train, y_test))
+	data = np.concatenate((x_train, x_test))
 
 	# perform 10-fold cross validation
 	for k in neighbors:
-	    knn = KNeighborsClassifier(n_neighbors=k,weights='distance',metric='minkowski',p=2)
-	    scores = cross_val_score(knn, x_train, y_train, cv=10, scoring='accuracy')
-	    # print("Scores Length: {}".format(len(scores)))
+	    knn = KNeighborsClassifier(n_neighbors=k,weights='distance',metric='euclidean',p=2)
+	    scores = cross_val_score(knn, data, targets, cv=10, scoring='accuracy')
+	    # print("Scores Length: {}".format(len(scores)))	    
 	    cv_scores.append(scores.mean())
 	# changing to misclassification error
 	MSE = [1 - x for x in cv_scores]	
 	# determining best k
 	optimal_k = neighbors[MSE.index(min(MSE))]
-	print("The best result was {}".format(1 - min(MSE)));
+	
 	print("The optimal number of neighbors is {}".format(optimal_k))
+
+	for k in range(0,100):
+		knn = KNeighborsClassifier(n_neighbors=optimal_k,weights='distance',metric='euclidean',p=2)
+		scores = cross_val_score(knn, data, targets, cv=10, scoring='accuracy')			
+
+		final_results.append(scores.mean())
+	final_results = np.array(final_results)
+	print("Number of results {}".format(np.size(final_results,0)))
+	print("The best result after 100 runs and 10-fold cross validation was {}%".format(np.around(final_results.mean() * 100, decimals=4)));
+
 
 	return MSE, neighbors
 
@@ -54,8 +68,8 @@ def KNN(class_1,class_2,apply_cross_validation=False,neighbors=17,columns=[3,4])
 
 	x_train, x_test, y_train, y_test = train_test_split(eeg_dataset, targets, test_size=0.40, random_state=42)
 	if(apply_cross_validation):
-		MSE, neighbors_list = cross_validation(x_train, y_train);
-	knn = KNeighborsClassifier(n_neighbors=neighbors,weights='distance',metric='minkowski',p=2)
+		MSE, neighbors_list = cross_validation(x_train, y_train, x_test, y_test);
+	knn = KNeighborsClassifier(n_neighbors=neighbors,weights='distance',metric='euclidean',p=2)
 	knn.fit(x_train, y_train)
 
 	pred = knn.predict(x_test)
@@ -69,8 +83,7 @@ def KNN(class_1,class_2,apply_cross_validation=False,neighbors=17,columns=[3,4])
 
 ## Grafica los resultados del cross_validation
 def plot_cross_validation(MSE,neigbors):
-	# plot misclassification error vs k
-	print("The data gets an score of {}".format(score))
+	# plot misclassification error vs k	
 	plt.plot(neighbors, MSE)
 	plt.xlabel('Number of Neighbors K')
 	plt.ylabel('Misclassification Error')

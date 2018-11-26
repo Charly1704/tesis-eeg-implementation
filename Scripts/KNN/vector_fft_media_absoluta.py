@@ -18,7 +18,7 @@ def load_datasets(name):
 	array = array[:,1:]
 	return array;
 
-# Aplica un filtro butterworth high_pass a los datos
+# Aplica un filtro butterworth low_pass a 64 Hz y otro high_pass a los datos
 def butterwort_high_pass(data,highcut,order=4,fs=128):
 	fs_norm = 0.5 * fs;
 	high_fs_norm = highcut / fs_norm		
@@ -155,9 +155,9 @@ relax_music_fft_df.to_csv('vector_fft_abs_mean_relax_music.csv')
 # print(relax_fft.shape)
 # print(relax_music_fft.shape)
 
-plt.scatter(memory_fft[0:100,3],memory_fft[0:100,4])
-# plt.scatter(relax_fft[0:100,3],relax_fft[0:100,4])
-plt.scatter(relax_music_fft[0:100,3],relax_music_fft[0:100,4])
+plt.scatter(memory_fft[0:100,3],memory_fft[0:100,4], label="Memoria")
+plt.scatter(relax_fft[0:100,3],relax_fft[0:100,4], label="Relajación")
+plt.scatter(relax_music_fft[0:100,3],relax_music_fft[0:100,4], label="Relajación-Musica")
 plt.title('Muestra de la distrubución de los datos')
 plt.xlabel('AF4')
 plt.ylabel('AF3')

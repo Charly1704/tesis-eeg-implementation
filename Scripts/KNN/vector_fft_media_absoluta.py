@@ -155,12 +155,12 @@ relax_music_fft_df.to_csv('vector_fft_abs_mean_relax_music.csv')
 # print(relax_fft.shape)
 # print(relax_music_fft.shape)
 
-plt.scatter(memory_fft[0:100,0],memory_fft[0:100,4], label='Memoria')
-plt.scatter(relax_fft[0:100,0],relax_fft[0:100,4], label='Relajación')
-plt.scatter(relax_music_fft[0:100,0],relax_music_fft[0:100,4], label='Relajación-Musica')
+plt.scatter(memory_fft[0:100,4],memory_fft[0:100,0], label='Memoria')
+plt.scatter(relax_fft[0:100,4],relax_fft[0:100,0], label='Relajación')
+plt.scatter(relax_music_fft[0:100,4],relax_music_fft[0:100,0], label='Relajación-Musica')
 plt.title('Muestra de la distrubución de los datos')
-plt.xlabel('AF3')
-plt.ylabel('AF4')
+plt.xlabel('AF4')
+plt.ylabel('AF3')
 
 plt.legend();
 plt.grid(True);
